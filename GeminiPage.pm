@@ -42,11 +42,15 @@ sub wrap_words #(text, left_margin)
     my @wrapped_lines;
     my @current_line_words;
     
+    my $current_line_num_words = 0;
+    my @num_words_in_line;
+    
     if (scalar(@words) == 0)
     {
         # this line was just whitespace, so display as a newline
         push(@wrapped_lines, "\n");
-        return \@wrapped_lines;
+        push(@num_words_in_line, 1);
+        return (\@wrapped_lines, \@num_words_in_line);
     }
     
     for my $word (@words)
@@ -55,17 +59,22 @@ sub wrap_words #(text, left_margin)
         if ($line_width + $word_len > $chars_wide)
         {
             push(@wrapped_lines, join(" ", @current_line_words));
+            push(@num_words_in_line, $current_line_num_words);
             @current_line_words = ();
+            $current_line_num_words = 0;
             $line_width = $left_margin;
         }
         
         push(@current_line_words, $word);
+        $current_line_num_words++;
         $line_width += $word_len;
         
         if ($line_width + 1 > $chars_wide) # if adding a space would be too wide
         {
             push(@wrapped_lines, join(" ", @current_line_words));
+            push(@num_words_in_line, $current_line_num_words);
             @current_line_words = ();
+            $current_line_num_words = 0;
             $line_width = $left_margin;
         }
         else
@@ -77,15 +86,16 @@ sub wrap_words #(text, left_margin)
     if (scalar(@current_line_words) > 0)
     {
         push(@wrapped_lines, join(" ", @current_line_words));
+        push(@num_words_in_line, $current_line_num_words);
     }
     
-    return \@wrapped_lines;
+    return (\@wrapped_lines, \@num_words_in_line);
 }
 
 sub render_text_line #(text)
 {
     my $text = $_[0];
-    my $wrapped_lines_ref = wrap_words($text, 0);
+    my ($wrapped_lines_ref, $num_words_in_line_ref) = wrap_words($text, 0);
     my @output;
     
     for my $line (@$wrapped_lines_ref)
@@ -98,7 +108,7 @@ sub render_text_line #(text)
         push(@output, "$line");
     }
     
-    return \@output;
+    return (\@output, $num_words_in_line_ref);
 }
 
 sub render_link_line #(text, url_num, page_urls_ref)
@@ -110,28 +120,31 @@ sub render_link_line #(text, url_num, page_urls_ref)
 
     if ($text)
     {
-        my $wrapped_lines_ref = wrap_words($text . " [$url_num]", 0);
+        my ($wrapped_lines_ref, $num_words_in_line_ref) = wrap_words($text . " [$url_num]", 0);
         
         for my $line (@$wrapped_lines_ref)
         {
             $line = apply_text_format($line, "link");
             push(@output, "$line\n");
         }
+        
+        return (\@output, $num_words_in_line_ref);
     }
     else
     {
         # no friendly text, show the url instead
         my $line = apply_text_format($$page_urls_ref[$url_num - 1], "link");
         push(@output, "$line\n");
+        my @num_words_in_line = [1];
+        
+        return (\@output, \@num_words_in_line);
     }
-    
-    return \@output;
 }
 
 sub render_list_line #(text)
 {
     my $text = $_[0];
-    my $wrapped_lines_ref = wrap_words($text, 2);
+    my ($wrapped_lines_ref, $num_words_in_line_ref) = wrap_words($text, 2);
     my @output;
     
     my $first_line = 1;
@@ -149,13 +162,13 @@ sub render_list_line #(text)
         $first_line = 0;
     }
     
-    return \@output;
+    return (\@output, $num_words_in_line_ref);
 }
 
 sub render_quote_line #(text)
 {
     my $text = $_[0];
-    my $wrapped_lines_ref = wrap_words($text, 0);
+    my ($wrapped_lines_ref, $num_words_in_line_ref) = wrap_words($text, 0);
     my @output;
     
     for my $line (@$wrapped_lines_ref)
@@ -164,14 +177,14 @@ sub render_quote_line #(text)
         push(@output, "$line\n");
     }
     
-    return \@output;
+    return (\@output, $num_words_in_line_ref);
 }
 
 sub render_heading_line #(text, level)
 {
     my $text = $_[0];
     my $level = $_[1];
-    my $wrapped_lines_ref = wrap_words($text, 0);
+    my ($wrapped_lines_ref, $num_words_in_line_ref) = wrap_words($text, 0);
     my @output;
     
     for my $line (@$wrapped_lines_ref)
@@ -180,7 +193,7 @@ sub render_heading_line #(text, level)
         push(@output, "$line\n");
     }
     
-    return \@output;
+    return (\@output, $num_words_in_line_ref);
 }
 
 sub render_page_lines #(parsed_page_content, page_urls_ref)
@@ -190,61 +203,75 @@ sub render_page_lines #(parsed_page_content, page_urls_ref)
     my $preformatted = 0;
     
     my @page_lines;
+    my @num_words_before_line;
+    my $num_words_so_far = 0;
     
     for my $line_content_ref (@$page_content_ref)
     {
+    
+        my $rendered_ref;
+        my $num_words_in_lines_ref;
         my $type = $line_content_ref->{"line_type"};
         if ($type eq "pre")
         {
             $preformatted = not $preformatted;
+            next;
         }
         elsif ($type eq "text")
         {
             # all preformatted lines are set as type text. if this line is preformatted, print as-is
             if ($preformatted)
             {
-                push(@page_lines, $line_content_ref->{'text'});
+                push(@page_lines, $line_content_ref->{"text"});
+                next;
             }
             else
             {
-                my $rendered_ref = render_text_line($line_content_ref->{'text'});
-                push(@page_lines, @$rendered_ref);
+                ($rendered_ref, $num_words_in_lines_ref) = render_text_line($line_content_ref->{"text"});
             }
         }
         elsif ($type eq "link")
         {
-            my $rendered_ref = render_link_line($line_content_ref->{'text'}, $line_content_ref->{'url_num'}, $page_urls_ref);
-            push(@page_lines, @$rendered_ref);
+            ($rendered_ref, $num_words_in_lines_ref) = render_link_line($line_content_ref->{"text"}, $line_content_ref->{"url_num"}, $page_urls_ref);
         }
         elsif ($type eq "li")
         {
-            my $rendered_ref = render_list_line($line_content_ref->{'text'});
-            push(@page_lines, @$rendered_ref);
+            ($rendered_ref, $num_words_in_lines_ref) = render_list_line($line_content_ref->{"text"});
         }
         elsif ($type eq "quote")
         {
-            my $rendered_ref = render_quote_line($line_content_ref->{'text'});
-            push(@page_lines, @$rendered_ref);
+            ($rendered_ref, $num_words_in_lines_ref) = render_quote_line($line_content_ref->{"text"});
         }
         elsif ($type eq "heading")
         {
-            my $rendered_ref = render_heading_line($line_content_ref->{'text'}, $line_content_ref->{'level'});
-            push(@page_lines, @$rendered_ref);
+            ($rendered_ref, $num_words_in_lines_ref) = render_heading_line($line_content_ref->{"text"}, $line_content_ref->{"level"});
+        }
+        
+        push(@page_lines, @$rendered_ref);
+        
+        for my $word_count (@$num_words_in_lines_ref)
+        {
+            push(@num_words_before_line, $num_words_so_far);
+            $num_words_so_far += $word_count;
         }
     }
     
-    return \@page_lines;
+    return (\@page_lines, \@num_words_before_line);
 }
 
 sub display_page #(page_lines, scroll_height)
 {
     my $page_lines_ref = $_[0];
     my $scroll_height = $_[1];
+    my $first_print = $_[2];
     
     my ($chars_wide, $chars_high, $pixels_wide, $pixels_high) = GetTerminalSize();
     
-    locate();
-    cldown();
+    if (not $first_print)
+    {
+        locate();
+        cldown();
+    }
     
     my $max_line_num = scalar(@$page_lines_ref) - 1;
     $scroll_height = max(min($scroll_height, $max_line_num - 1), 0);
@@ -252,7 +279,7 @@ sub display_page #(page_lines, scroll_height)
     my $current_line_num = $scroll_height;
     my $lines_printed = 0;
     
-    while ($current_line_num < $max_line_num and $lines_printed < $chars_high)
+    while ($current_line_num <= $max_line_num and $lines_printed < $chars_high)
     {
         my $line = $$page_lines_ref[$current_line_num];
         if ($lines_printed == $chars_high - 1)
@@ -265,6 +292,15 @@ sub display_page #(page_lines, scroll_height)
 
         $lines_printed++;
         $current_line_num++;
+    }
+    
+    if ($first_print)
+    {
+        while ($lines_printed < $chars_high - 1)
+        {
+            print("\n");
+            $lines_printed++;
+        }
     }
     
     # return the actual scroll height being shown

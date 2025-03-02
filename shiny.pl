@@ -19,12 +19,63 @@ our $SUCCESS = 1;
 our $CANCELLED = 0;
 our $FAILED = -1;
 
+our $first_print = 1;
 our $current_host = "";
 our $current_page_dir = "";
 our $current_page_content_ref = 0;
 our $current_page_urls_ref = 0;
 our $current_page_lines_ref = 0;
 our $scroll_height = 0;
+our $num_words_before_line_ref = 0;
+our $scroll_word_num = 0; # the number of the word out of all words in the page which the scroll height is at (used for keeping the content in the same place when resizing window)
+
+
+$SIG{"WINCH"} = \&winch;
+
+sub find_line_num_of_word_num # want to find the index of the closest value equal or below $val
+{
+    my $arr_ref = $_[0];
+    my $val = $_[1];
+    
+    my $start = 0;
+    my $end = scalar(@$arr_ref);
+    while ($start <= $end)
+    {
+        my $index = int($start + ($end - $start) / 2);
+        if ($$arr_ref[$index] < $val)
+        {
+            if ($index == scalar(@$arr_ref) - 1 or $$arr_ref[$index + 1] > $val)
+            {
+                return $index;
+            }
+            
+            $start = $index + 1;
+            next;
+        }
+        if ($$arr_ref[$index] > $val)
+        {
+            $end = $index - 1;
+            next;
+        }
+        
+        return $index;
+    }
+    
+    # should never get here
+    return -1;
+}
+
+sub winch
+{
+    if ($first_print == 0)
+    {
+        ($current_page_lines_ref, $num_words_before_line_ref) = render_page_lines($current_page_content_ref, $current_page_urls_ref);
+        
+        # find the line which has the word we want to scroll to
+        my $desired_scroll_height = find_line_num_of_word_num($num_words_before_line_ref, $scroll_word_num);        
+        $scroll_height = display_page($current_page_lines_ref, $desired_scroll_height, $first_print);
+    }
+}
 
 sub print_usage
 {
@@ -40,8 +91,10 @@ sub create_page
     my $page_text = $_[0];
     
     ($current_page_content_ref, $current_page_urls_ref) = parse_page($page_text);
-    $current_page_lines_ref = render_page_lines($current_page_content_ref, $current_page_urls_ref);
-    $scroll_height = display_page($current_page_lines_ref, 0);
+    ($current_page_lines_ref, $num_words_before_line_ref) = render_page_lines($current_page_content_ref, $current_page_urls_ref);
+    $scroll_height = display_page($current_page_lines_ref, 0, $first_print);
+    $scroll_word_num = 0;
+    $first_print = 0;
 }
 
 sub confirm_exit
@@ -190,10 +243,11 @@ sub ease_scroll
         }
         my $float_scroll_height = &$cap_function($start_scroll_height + $total_dif * $eased, $target_scroll_height);
         $scroll_height = &$round_function($float_scroll_height);
-        #print("$t : $scroll_height\n");
         display_page($current_page_lines_ref, ($scroll_height));           
         usleep($dt);
     }
+    
+    $scroll_word_num = $$num_words_before_line_ref[$scroll_height];
 }
 
 
@@ -218,6 +272,13 @@ if ($num_args == 0)
 elsif ($num_args == 1)
 {
     my $url = $ARGV[0];
+    
+    if ($url eq "--help")
+    {
+        print_usage();
+        exit();
+    }
+    
     if (index($url, "gemini://") != 0)
     {
         $url = "gemini://" . $url;
@@ -232,9 +293,6 @@ elsif ($num_args == 1)
     }
     else
     {
-        # test content
-        # $page_text = "# heading 1\n## heading 2\n### heading 3\n#heading no space\n>funny and great quote\n* bullet\n* another bullet\n*not a bullet\n```\npreformat mode\n# header in preformat\n```\n=> urltoapage      text  with  \t  annoying variable  spaces\n=>       anotherurl";
-
         create_page($page_text);
     }
 }
