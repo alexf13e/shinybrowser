@@ -724,3 +724,30 @@ requesting: gemini://geminiprotocol.net on host geminiprotocol.net
 redirecting to: gemini://geminiprotocol.net/
 requesting: gemini://geminiprotocol.net/ on host geminiprotocol.net
 requesting: gemini://geminiprotocol.net/docs/faq.gmi on host geminiprotocol.net
+requesting: gemini://geminiprotocol.net on host geminiprotocol.net
+redirecting to: gemini://geminiprotocol.net/
+requesting: gemini://geminiprotocol.net/ on host geminiprotocol.net
+requesting: gemini://geminiprotocol.net on host geminiprotocol.net
+redirecting to: gemini://geminiprotocol.net/
+requesting: gemini://geminiprotocol.net/ on host geminiprotocol.net
+requesting: gemini://geminiprotocol.net on host geminiprotocol.net
+redirecting to: gemini://geminiprotocol.net/
+requesting: gemini://geminiprotocol.net/ on host geminiprotocol.net
+requesting: gemini://geminiprotocol.net on host geminiprotocol.net
+redirecting to: gemini://geminiprotocol.net/
+requesting: gemini://geminiprotocol.net/ on host geminiprotocol.net
+requesting: gemini://geminiprotocol.net on host geminiprotocol.net
+redirecting to: gemini://geminiprotocol.net/
+requesting: gemini://geminiprotocol.net/ on host geminiprotocol.net
+requesting: gemini://geminiprotocol.net on host geminiprotocol.net
+redirecting to: gemini://geminiprotocol.net/
+requesting: gemini://geminiprotocol.net/ on host geminiprotocol.net
+requesting: gemini://geminiprotocol.net on host geminiprotocol.net
+redirecting to: gemini://geminiprotocol.net/
+requesting: gemini://geminiprotocol.net/ on host geminiprotocol.net
+requesting: gemini://geminiprotocol.net on host geminiprotocol.net
+redirecting to: gemini://geminiprotocol.net/
+requesting: gemini://geminiprotocol.net/ on host geminiprotocol.net
+requesting: gemini://geminiprotocol.net on host geminiprotocol.net
+redirecting to: gemini://geminiprotocol.net/
+requesting: gemini://geminiprotocol.net/ on host geminiprotocol.net

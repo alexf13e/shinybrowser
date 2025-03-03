@@ -8,6 +8,7 @@ use List::Util qw(min max);
 use Term::ANSIColor qw(RESET :constants);
 use Term::ANSIScreen qw(:cursor :screen);
 use Term::ReadKey;
+use List::Util qw(min max);
 
 use lib(".");
 use Log qw(log_write);
@@ -15,6 +16,7 @@ use Log qw(log_write);
 our @ISA = qw(Exporter);
 our @EXPORT_OK = qw(render_page_lines display_page get_next_scroll_line get_next_scroll_page get_scroll_end display_command_prompt set_command_prompt set_command_error find_line_num_of_word_num);
 
+our $max_print_width = 120; # set to 0 to print to full window width
 our $current_command_prompt = "";
 our $current_command_error = "";
 
@@ -41,6 +43,11 @@ sub wrap_words #(text, left_margin)
     
     my @words = split(" ", $text);
     my ($chars_wide, $chars_high, $pixels_wide, $pixels_high) = GetTerminalSize();
+    
+    if ($max_print_width > 0)
+    {
+        $chars_wide = min($chars_wide, $max_print_width);
+    }
     
     my $line_width = $left_margin;
     my @wrapped_lines;
@@ -267,15 +274,11 @@ sub display_page #(page_lines, scroll_height)
 {
     my $page_lines_ref = $_[0];
     my $scroll_height = $_[1];
-    my $first_print = $_[2];
     
     my ($chars_wide, $chars_high, $pixels_wide, $pixels_high) = GetTerminalSize();
     
-    if (not $first_print)
-    {
-        locate();
-        cldown();
-    }
+    locate();
+    cldown();
     
     my $max_line_num = scalar(@$page_lines_ref) - 1;
     $scroll_height = max(min($scroll_height, $max_line_num - 1), 0);
@@ -292,21 +295,14 @@ sub display_page #(page_lines, scroll_height)
             $line =~ s/\n//;
         }
         
+        if ($max_print_width > 0)
+        {
+            right(int(($chars_wide - $max_print_width) / 2));
+        }
         print($line);
 
         $lines_printed++;
         $current_line_num++;
-    }
-    
-    if ($first_print)
-    {
-        savepos();
-        while ($lines_printed < $chars_high - 1)
-        {
-            print("\n");
-            $lines_printed++;
-        }
-        loadpos();
     }
     
     # return the actual scroll height being shown

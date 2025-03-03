@@ -22,7 +22,6 @@ our $SUCCESS = 1;
 our $CANCELLED = 0;
 our $FAILED = -1;
 
-our $first_print = 1;
 our $current_host = "";
 our $current_page_dir = "";
 our $current_page_content_ref = 0;
@@ -37,13 +36,13 @@ $SIG{"WINCH"} = \&winch;
 
 sub winch
 {
-    if ($first_print == 0)
+    if ($current_page_content_ref != 0)
     {
         ($current_page_lines_ref, $num_words_before_line_ref) = render_page_lines($current_page_content_ref, $current_page_urls_ref);
         
         # find the line which has the word we want to scroll to
         $scroll_height = find_line_num_of_word_num($num_words_before_line_ref, $scroll_word_num);        
-        $scroll_height = display_page($current_page_lines_ref, $scroll_height, $first_print);
+        $scroll_height = display_page($current_page_lines_ref, $scroll_height);
         
         display_command_prompt();
         STDOUT->flush();
@@ -65,9 +64,8 @@ sub create_page
     
     ($current_page_content_ref, $current_page_urls_ref) = parse_page($page_text);
     ($current_page_lines_ref, $num_words_before_line_ref) = render_page_lines($current_page_content_ref, $current_page_urls_ref);
-    $scroll_height = display_page($current_page_lines_ref, 0, $first_print);
+    $scroll_height = display_page($current_page_lines_ref, 0);
     $scroll_word_num = 0;
-    $first_print = 0;
 }
 
 sub confirm_exit
