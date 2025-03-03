@@ -7,6 +7,9 @@ use Exporter;
 
 use Net::SSLeay qw(sslcat);
 
+use lib(".");
+use Log qw(log_write);
+
 our @ISA = qw(Exporter);
 our @EXPORT_OK = qw(send_request make_and_send_request get_url_parts handle_url get_full_url);
 
@@ -53,7 +56,7 @@ sub redirect #(request) -> (content, ok)
     my $request = $_[0];
     my (undef, $host, undef) = get_url_parts($request);
     
-    print("redirecting to: $request\n");
+    log_write("redirecting to: $request\n");
     return send_request($host, "$request\r\n");
 }
 
@@ -90,7 +93,7 @@ sub send_request #(host, request) -> (content, ok)
     my $host = $_[0];
     my $request = $_[1];
     my $printable_request = substr($request, 0, -2);
-    print("requesting: $printable_request on host $host\n");
+    log_write("requesting: $printable_request on host $host\n");
     
     my $port = 1965;
     my ($response, $err) = sslcat($host, $port, $request);
@@ -149,7 +152,6 @@ sub get_full_url #(url, host, page_dir)
         $full_url = $url;
     }
     
-    
     return ($full_url, 1);
 }
 
@@ -161,8 +163,7 @@ sub handle_url #(url, host)
     (my $protocol, undef, undef) = get_url_parts($url);
     if ($protocol ne "gemini")
     {
-        #todo: handle other protocols
-        return ("non gemini url: $url", 0);
+        return ("non gemini url: $url", 2);
     }
     
     my $request = "$url\r\n";

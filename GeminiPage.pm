@@ -9,9 +9,13 @@ use Term::ANSIColor qw(RESET :constants);
 use Term::ANSIScreen qw(:cursor :screen);
 use Term::ReadKey;
 
-our @ISA = qw(Exporter);
-our @EXPORT_OK = qw(render_page_lines display_page get_next_scroll_line get_next_scroll_page get_scroll_end display_command_prompt set_command_error);
+use lib(".");
+use Log qw(log_write);
 
+our @ISA = qw(Exporter);
+our @EXPORT_OK = qw(render_page_lines display_page get_next_scroll_line get_next_scroll_page get_scroll_end display_command_prompt set_command_prompt set_command_error find_line_num_of_word_num);
+
+our $current_command_prompt = "";
 our $current_command_error = "";
 
 sub apply_text_format
@@ -296,11 +300,13 @@ sub display_page #(page_lines, scroll_height)
     
     if ($first_print)
     {
+        savepos();
         while ($lines_printed < $chars_high - 1)
         {
             print("\n");
             $lines_printed++;
         }
+        loadpos();
     }
     
     # return the actual scroll height being shown
@@ -342,30 +348,79 @@ sub get_scroll_end #(page_lines_ref)
 
 sub display_command_prompt #(prompt)
 {
-    my $prompt = $_[0];
-    
-    locate(1, 1);
-    clline();
-    
-    locate(3, 1);
-    clline();
+    if (scalar(@_) > 0)
+    {
+        set_command_prompt($_[0]);
+    }
     
     if ($current_command_error ne "")
     {
+        locate(3, 1);
+        clline();
         print("Error: $current_command_error");
+        
         locate(4, 1);
         clline();
     }
     
-    locate(2, 1);
-    clline();
-    $prompt = "$prompt: ";
-    print($prompt);
+    if ($current_command_prompt ne "")
+    {
+        locate(1, 1);
+        clline();
+        
+        if ($current_command_error eq "")
+        {
+            locate(3, 1);
+            clline();
+        }
+        
+        locate(2, 1);
+        clline();
+        print("$current_command_prompt: ");
+    }
+}
+
+sub set_command_prompt
+{
+    $current_command_prompt = $_[0];
 }
 
 sub set_command_error
 {
     $current_command_error = $_[0];
+}
+
+sub find_line_num_of_word_num # want to find the index of the closest value equal or below $val
+{
+    my $arr_ref = $_[0];
+    my $val = $_[1];
+    
+    my $start = 0;
+    my $end = scalar(@$arr_ref);
+    while ($start <= $end)
+    {
+        my $index = int($start + ($end - $start) / 2);
+        if ($$arr_ref[$index] < $val)
+        {
+            if ($index == scalar(@$arr_ref) - 1 or $$arr_ref[$index + 1] > $val)
+            {
+                return $index;
+            }
+            
+            $start = $index + 1;
+            next;
+        }
+        if ($$arr_ref[$index] > $val)
+        {
+            $end = $index - 1;
+            next;
+        }
+        
+        return $index;
+    }
+    
+    # should never get here
+    return -1;
 }
 
 1;

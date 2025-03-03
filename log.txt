@@ -1,0 +1,726 @@
+requesting: gemini://geminiprotocol.net on host geminiprotocol.net
+redirecting to: gemini://geminiprotocol.net/
+requesting: gemini://geminiprotocol.net/ on host geminiprotocol.net
+setting command prompt to Link number
+Link number
+setting command prompt to Link number
+Link number
+setting command prompt to Link number
+Link number
+requesting: gemini://geminiprotocol.net on host geminiprotocol.net
+redirecting to: gemini://geminiprotocol.net/
+requesting: gemini://geminiprotocol.net/ on host geminiprotocol.net
+setting command prompt to Confirm exit? [Y/n]
+Confirm exit? [Y/n]
+requesting: gemini://geminiprotocol.net on host geminiprotocol.net
+redirecting to: gemini://geminiprotocol.net/
+requesting: gemini://geminiprotocol.net/ on host geminiprotocol.net
+setting command prompt to Link number
+Link number
+setting command prompt to Link number
+Link number
+setting command prompt to Link number
+Link number
+setting command prompt to Link number
+Link number
+setting command prompt to Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+setting command prompt to Link number
+Link number
+setting command prompt to Link number
+Link number
+setting command prompt to Confirm exit? [Y/n]
+Confirm exit? [Y/n]
+requesting: gemini://geminiprotocol.net on host geminiprotocol.net
+redirecting to: gemini://geminiprotocol.net/
+requesting: gemini://geminiprotocol.net/ on host geminiprotocol.net
+setting command prompt to Link number
+Link number
+setting command prompt to confirm request to https://www.youtube.com/watch?v=DoEI6VzybDk [Y/n]
+confirm request to https://www.youtube.com/watch?v=DoEI6VzybDk [Y/n]
+setting command prompt to open https://www.youtube.com/watch?v=DoEI6VzybDk in browser? [Y/n]
+open https://www.youtube.com/watch?v=DoEI6VzybDk in browser? [Y/n]
+setting command prompt to Confirm exit? [Y/n]
+Confirm exit? [Y/n]
+requesting: gemini://geminiprotocol.net on host geminiprotocol.net
+redirecting to: gemini://geminiprotocol.net/
+requesting: gemini://geminiprotocol.net/ on host geminiprotocol.net
+setting command prompt to Link number
+Link number
+setting command prompt to open https://www.youtube.com/watch?v=DoEI6VzybDk in browser? [Y/n]
+open https://www.youtube.com/watch?v=DoEI6VzybDk in browser? [Y/n]
+setting command prompt to Confirm exit? [Y/n]
+Confirm exit? [Y/n]
+requesting: gemini://geminiprotocol.net on host geminiprotocol.net
+redirecting to: gemini://geminiprotocol.net/
+requesting: gemini://geminiprotocol.net/ on host geminiprotocol.net
+setting command prompt to Link number
+Link number
+setting command prompt to open https://www.youtube.com/watch?v=DoEI6VzybDk in browser? [Y/n]
+open https://www.youtube.com/watch?v=DoEI6VzybDk in browser? [Y/n]
+setting command prompt to Confirm exit? [Y/n]
+Confirm exit? [Y/n]
+requesting: gemini://geminiprotocol.net on host geminiprotocol.net
+redirecting to: gemini://geminiprotocol.net/
+requesting: gemini://geminiprotocol.net/ on host geminiprotocol.net
+abc
+abc
+abc
+abc
+setting command prompt to Confirm exit? [Y/n]
+Confirm exit? [Y/n]
+abc
+abc
+abc
+abc
+abc
+abc
+abc
+abc
+abc
+abc
+abc
+abc
+abc
+abc
+abc
+abc
+abc
+abc
+abc
+abc
+abc
+setting command prompt to Confirm exit? [Y/n]
+Confirm exit? [Y/n]
+requesting: gemini://geminiprotocol.net on host geminiprotocol.net
+redirecting to: gemini://geminiprotocol.net/
+requesting: gemini://geminiprotocol.net/ on host geminiprotocol.net
+
+abc
+abc
+abc
+abc
+abc
+abc
+abc
+abc
+abc
+abc
+abc
+abc
+abc
+abc
+abc
+abc
+abc
+abc
+abc
+abc
+abc
+abc
+abc
+abc
+abc
+setting command prompt to Confirm exit? [Y/n]
+Confirm exit? [Y/n]
+requesting: gemini://geminiprotocol.net on host geminiprotocol.net
+redirecting to: gemini://geminiprotocol.net/
+requesting: gemini://geminiprotocol.net/ on host geminiprotocol.net
+setting command prompt to Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+setting command prompt to Link number
+Link number
+setting command prompt to Link number
+Link number
+setting command prompt to Link number
+Link number
+setting command prompt to Confirm exit? [Y/n]
+Confirm exit? [Y/n]
+requesting: gemini://geminiprotocol.net on host geminiprotocol.net
+redirecting to: gemini://geminiprotocol.net/
+requesting: gemini://geminiprotocol.net/ on host geminiprotocol.net
+
+
+
+
+
+
+
+
+
+setting command prompt to Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+setting command prompt to Confirm exit? [Y/n]
+Confirm exit? [Y/n]
+requesting: gemini://geminiprotocol.net on host geminiprotocol.net
+redirecting to: gemini://geminiprotocol.net/
+requesting: gemini://geminiprotocol.net/ on host geminiprotocol.net
+setting command prompt to Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+setting command prompt to Confirm exit? [Y/n]
+Confirm exit? [Y/n]
+requesting: gemini://geminiprotocol.net on host geminiprotocol.net
+redirecting to: gemini://geminiprotocol.net/
+requesting: gemini://geminiprotocol.net/ on host geminiprotocol.net
+setting command prompt to Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+setting command prompt to Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+setting command prompt to Link number
+Link number
+setting command prompt to Confirm exit? [Y/n]
+Confirm exit? [Y/n]
+requesting: gemini://geminiprotocol.net on host geminiprotocol.net
+redirecting to: gemini://geminiprotocol.net/
+requesting: gemini://geminiprotocol.net/ on host geminiprotocol.net
+setting command prompt to Link number
+Link number
+setting command prompt to open https://www.youtube.com/watch?v=DoEI6VzybDk in browser? [Y/n]
+open https://www.youtube.com/watch?v=DoEI6VzybDk in browser? [Y/n]
+setting command prompt to Link number
+Link number
+setting command prompt to Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+requesting: gemini://geminiprotocol.net/docs/faq.gmi on host geminiprotocol.net
+setting command prompt to Confirm exit? [Y/n]
+Confirm exit? [Y/n]
+requesting: gemini://geminiprotocol.net on host geminiprotocol.net
+redirecting to: gemini://geminiprotocol.net/
+requesting: gemini://geminiprotocol.net/ on host geminiprotocol.net
+setting command prompt to Confirm exit? [Y/n]
+Confirm exit? [Y/n]
+setting command prompt to Confirm exit? [Y/n]
+Confirm exit? [Y/n]
+requesting: gemini://geminiprotocol.net on host geminiprotocol.net
+redirecting to: gemini://geminiprotocol.net/
+requesting: gemini://geminiprotocol.net/ on host geminiprotocol.net
+setting command prompt to Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+setting command prompt to Confirm exit? [Y/n]
+Confirm exit? [Y/n]
+requesting: gemini://geminiprotocol.net on host geminiprotocol.net
+redirecting to: gemini://geminiprotocol.net/
+requesting: gemini://geminiprotocol.net/ on host geminiprotocol.net
+setting command prompt to Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+setting command prompt to Link number
+Link number
+setting command prompt to Link number
+Link number
+setting command prompt to Link number
+Link number
+setting command prompt to Link number
+Link number
+setting command prompt to Link number
+Link number
+setting command prompt to Confirm exit? [Y/n]
+Confirm exit? [Y/n]
+setting command prompt to Confirm exit? [Y/n]
+Confirm exit? [Y/n]
+setting command prompt to Confirm exit? [Y/n]
+Confirm exit? [Y/n]
+requesting: gemini://geminiprotocol.net on host geminiprotocol.net
+redirecting to: gemini://geminiprotocol.net/
+requesting: gemini://geminiprotocol.net/ on host geminiprotocol.net
+setting command prompt to Link number
+Link number
+setting command prompt to Link number
+Link number
+setting command prompt to Link number
+Link number
+setting command prompt to Confirm exit? [Y/n]
+Confirm exit? [Y/n]
+setting command prompt to Confirm exit? [Y/n]
+Confirm exit? [Y/n]
+requesting: gemini://geminiprotocol.net on host geminiprotocol.net
+redirecting to: gemini://geminiprotocol.net/
+requesting: gemini://geminiprotocol.net/ on host geminiprotocol.net
+setting command prompt to Confirm exit? [Y/n]
+Confirm exit? [Y/n]
+setting command prompt to Confirm exit? [Y/n]
+Confirm exit? [Y/n]
+requesting: gemini://geminiprotocol.net on host geminiprotocol.net
+redirecting to: gemini://geminiprotocol.net/
+requesting: gemini://geminiprotocol.net/ on host geminiprotocol.net
+setting command prompt to Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+setting command prompt to Link number
+Link number
+setting command prompt to Confirm exit? [Y/n]
+Confirm exit? [Y/n]
+requesting: gemini://geminiprotocol.net on host geminiprotocol.net
+redirecting to: gemini://geminiprotocol.net/
+requesting: gemini://geminiprotocol.net/ on host geminiprotocol.net
+setting command prompt to Link number
+Link number
+setting command prompt to Link number
+Link number
+setting command prompt to Confirm exit? [Y/n]
+Confirm exit? [Y/n]
+requesting: gemini://geminiprotocol.net on host geminiprotocol.net
+redirecting to: gemini://geminiprotocol.net/
+requesting: gemini://geminiprotocol.net/ on host geminiprotocol.net
+setting command prompt to Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+Link number
+setting command prompt to Link number
+Link number
+setting command prompt to Link number
+Link number
+setting command prompt to Link number
+Link number
+setting command prompt to Confirm exit? [Y/n]
+Confirm exit? [Y/n]
+requesting: gemini://geminiprotocol.net on host geminiprotocol.net
+redirecting to: gemini://geminiprotocol.net/
+requesting: gemini://geminiprotocol.net/ on host geminiprotocol.net
+setting command prompt to Link number
+Link number
+setting command prompt to Link number
+Link number
+setting command prompt to Confirm exit? [Y/n]
+Confirm exit? [Y/n]
+requesting: gemini://geminiprotocol.net on host geminiprotocol.net
+redirecting to: gemini://geminiprotocol.net/
+requesting: gemini://geminiprotocol.net/ on host geminiprotocol.net
+requesting: gemini://geminiprotocol.net on host geminiprotocol.net
+redirecting to: gemini://geminiprotocol.net/
+requesting: gemini://geminiprotocol.net/ on host geminiprotocol.net
+requesting: gemini://geminiprotocol.net on host geminiprotocol.net
+redirecting to: gemini://geminiprotocol.net/
+requesting: gemini://geminiprotocol.net/ on host geminiprotocol.net
+requesting: gemini://geminiprotocol.net on host geminiprotocol.net
+redirecting to: gemini://geminiprotocol.net/
+requesting: gemini://geminiprotocol.net/ on host geminiprotocol.net
+requesting: gemini://geminiprotocol.net on host geminiprotocol.net
+redirecting to: gemini://geminiprotocol.net/
+requesting: gemini://geminiprotocol.net/ on host geminiprotocol.net
+requesting: gemini://geminiprotocol.net on host geminiprotocol.net
+redirecting to: gemini://geminiprotocol.net/
+requesting: gemini://geminiprotocol.net/ on host geminiprotocol.net
+requesting: gemini://geminiprotocol.net on host geminiprotocol.net
+redirecting to: gemini://geminiprotocol.net/
+requesting: gemini://geminiprotocol.net/ on host geminiprotocol.net
+requesting: gemini://geminiprotocol.net on host geminiprotocol.net
+redirecting to: gemini://geminiprotocol.net/
+requesting: gemini://geminiprotocol.net/ on host geminiprotocol.net
+requesting: gemini://geminiprotocol.net on host geminiprotocol.net
+redirecting to: gemini://geminiprotocol.net/
+requesting: gemini://geminiprotocol.net/ on host geminiprotocol.net
+requesting: gemini://geminiprotocol.net on host geminiprotocol.net
+redirecting to: gemini://geminiprotocol.net/
+requesting: gemini://geminiprotocol.net/ on host geminiprotocol.net
+requesting: gemini://geminiprotocol.net on host geminiprotocol.net
+redirecting to: gemini://geminiprotocol.net/
+requesting: gemini://geminiprotocol.net/ on host geminiprotocol.net
+requesting: gemini://geminiprotocol.net on host geminiprotocol.net
+redirecting to: gemini://geminiprotocol.net/
+requesting: gemini://geminiprotocol.net/ on host geminiprotocol.net
+requesting: gemini://geminiprotocol.net on host geminiprotocol.net
+redirecting to: gemini://geminiprotocol.net/
+requesting: gemini://geminiprotocol.net/ on host geminiprotocol.net
+requesting: gemini://geminiprotocol.net/docs/faq.gmi on host geminiprotocol.net
+requesting: gemini://geminiprotocol.net on host geminiprotocol.net
+redirecting to: gemini://geminiprotocol.net/
+requesting: gemini://geminiprotocol.net/ on host geminiprotocol.net
+requesting: gemini://geminiprotocol.net/docs/faq.gmi on host geminiprotocol.net
+requesting: gemini://geminiprotocol.net on host geminiprotocol.net
+redirecting to: gemini://geminiprotocol.net/
+requesting: gemini://geminiprotocol.net/ on host geminiprotocol.net
+requesting: gemini://geminiprotocol.net/docs/faq.gmi on host geminiprotocol.net
+requesting: gemini://geminiprotocol.net on host geminiprotocol.net
+redirecting to: gemini://geminiprotocol.net/
+requesting: gemini://geminiprotocol.net/ on host geminiprotocol.net
+requesting: gemini://geminiprotocol.net on host geminiprotocol.net
+redirecting to: gemini://geminiprotocol.net/
+requesting: gemini://geminiprotocol.net/ on host geminiprotocol.net
+requesting: gemini://geminiprotocol.net on host geminiprotocol.net
+redirecting to: gemini://geminiprotocol.net/
+requesting: gemini://geminiprotocol.net/ on host geminiprotocol.net
+requesting: gemini://geminiprotocol.net on host geminiprotocol.net
+redirecting to: gemini://geminiprotocol.net/
+requesting: gemini://geminiprotocol.net/ on host geminiprotocol.net
+requesting: gemini://geminiprotocol.net on host geminiprotocol.net
+redirecting to: gemini://geminiprotocol.net/
+requesting: gemini://geminiprotocol.net/ on host geminiprotocol.net
+requesting: gemini://geminiprotocol.net/docs/faq.gmi on host geminiprotocol.net

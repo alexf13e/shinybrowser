@@ -13,7 +13,10 @@ use POSIX qw(ceil floor);
 use lib(".");
 use GeminiRequest qw(send_request make_and_send_request get_url_parts handle_url get_full_url);
 use GeminiParser qw(parse_page);
-use GeminiPage qw(render_page_lines display_page get_next_scroll_line get_next_scroll_page get_scroll_end display_command_prompt set_command_error);
+use GeminiPage qw(render_page_lines display_page get_next_scroll_line get_next_scroll_page get_scroll_end display_command_prompt set_command_prompt set_command_error find_line_num_of_word_num);
+use Log qw(log_write);
+
+system("tput", "smcup");
 
 our $SUCCESS = 1;
 our $CANCELLED = 0;
@@ -32,39 +35,6 @@ our $scroll_word_num = 0; # the number of the word out of all words in the page 
 
 $SIG{"WINCH"} = \&winch;
 
-sub find_line_num_of_word_num # want to find the index of the closest value equal or below $val
-{
-    my $arr_ref = $_[0];
-    my $val = $_[1];
-    
-    my $start = 0;
-    my $end = scalar(@$arr_ref);
-    while ($start <= $end)
-    {
-        my $index = int($start + ($end - $start) / 2);
-        if ($$arr_ref[$index] < $val)
-        {
-            if ($index == scalar(@$arr_ref) - 1 or $$arr_ref[$index + 1] > $val)
-            {
-                return $index;
-            }
-            
-            $start = $index + 1;
-            next;
-        }
-        if ($$arr_ref[$index] > $val)
-        {
-            $end = $index - 1;
-            next;
-        }
-        
-        return $index;
-    }
-    
-    # should never get here
-    return -1;
-}
-
 sub winch
 {
     if ($first_print == 0)
@@ -72,15 +42,18 @@ sub winch
         ($current_page_lines_ref, $num_words_before_line_ref) = render_page_lines($current_page_content_ref, $current_page_urls_ref);
         
         # find the line which has the word we want to scroll to
-        my $desired_scroll_height = find_line_num_of_word_num($num_words_before_line_ref, $scroll_word_num);        
-        $scroll_height = display_page($current_page_lines_ref, $desired_scroll_height, $first_print);
+        $scroll_height = find_line_num_of_word_num($num_words_before_line_ref, $scroll_word_num);        
+        $scroll_height = display_page($current_page_lines_ref, $scroll_height, $first_print);
+        
+        display_command_prompt();
+        STDOUT->flush();
     }
 }
 
 sub print_usage
 {
     print("usage: \n");
-    print("./shiny => blank page (press g to enter a url)\n");
+    print("./shiny => blank page\n");
     print("./shiny gemini://geminiprotocol.net => gemini://geminiprotocol.net\n");
     print("./shiny geminiprotocol.net => gemini://geminiprotocol.net\n");
     print("./shiny geminiprotocol.net/news => gemini://geminiprotocol.net/news\n");
@@ -105,8 +78,9 @@ sub confirm_exit
     chomp($answer);
     if ($answer eq "y" or $answer eq "")
     {
-        up();
+        locate();
         cldown();
+        system("tput", "rmcup");
         exit();
     }
 }
@@ -119,6 +93,7 @@ sub navigate_link
     chomp($url_num);
     if ($url_num eq "")
     {
+        set_command_prompt("");
         set_command_error("");
         return $CANCELLED;
     }
@@ -151,6 +126,7 @@ sub navigate_link
     chomp($answer);
     if ($answer ne "y" and $answer ne "")
     {
+        set_command_prompt("");
         set_command_error("");
         return $CANCELLED;
     }
@@ -158,20 +134,27 @@ sub navigate_link
     (undef, my $new_host, undef) = get_url_parts($full_url);
     (my $page_text, $ok) = handle_url($full_url, $new_host);
     
-    if (not $ok)
+
+    if ($ok == 0)
     {
         set_command_error($page_text);
         return $FAILED;
     }
-    else
+    elsif ($ok == 1)
     {
         create_page($page_text);
         (undef, $current_host, $current_page_dir) = get_url_parts($full_url);
+        set_command_prompt("");
         set_command_error("");
         return $SUCCESS;
     }
-}
+    elsif ($ok == 2)
+    {
+        open_in_browser($full_url);
+        return $SUCCESS;
+    }
 
+}
 
 sub goto_url
 {
@@ -192,16 +175,22 @@ sub goto_url
     (undef, my $new_host, undef) = get_url_parts($url);
     my ($page_text, $ok) = handle_url($url, $new_host);
     
-    if (not $ok)
+    if ($ok == 0)
     {
         set_command_error("$page_text");
         return $FAILED;
     }
-    else
+    elsif ($ok == 1)
     {
         create_page($page_text);
         (undef, $current_host, $current_page_dir) = get_url_parts($url);
+        set_command_prompt("");
         set_command_error("");
+        return $SUCCESS;
+    }
+    elsif ($ok == 2)
+    {
+        open_in_browser($url);
         return $SUCCESS;
     }
 }
@@ -243,11 +232,26 @@ sub ease_scroll
         }
         my $float_scroll_height = &$cap_function($start_scroll_height + $total_dif * $eased, $target_scroll_height);
         $scroll_height = &$round_function($float_scroll_height);
-        display_page($current_page_lines_ref, ($scroll_height));           
+        display_page($current_page_lines_ref, $scroll_height);           
         usleep($dt);
     }
     
     $scroll_word_num = $$num_words_before_line_ref[$scroll_height];
+}
+
+sub open_in_browser
+{
+    my $url = $_[0];
+    
+    display_command_prompt("open $url in browser? [Y/n]");
+    my $answer = lc(<STDIN>);
+    chomp($answer);
+    if ($answer eq "y" or $answer eq "")
+    {
+        system("xdg-open", $url);
+    }
+
+    display_page($current_page_lines_ref, $scroll_height);
 }
 
 
@@ -266,6 +270,7 @@ if ($num_args == 0)
     }
     if ($result == $CANCELLED)
     {
+        system("tput", "rmcup");
         exit();
     }
 }
@@ -276,6 +281,7 @@ elsif ($num_args == 1)
     if ($url eq "--help")
     {
         print_usage();
+        system("tput", "rmcup");
         exit();
     }
     
@@ -287,24 +293,31 @@ elsif ($num_args == 1)
     (undef, $current_host, $current_page_dir) = get_url_parts($url);
     ($page_text, $ok) = handle_url($url, $current_host);
     
-    if (not $ok)
+    if ($ok == 0)
     {
         print("$page_text\n");
     }
-    else
+    elsif ($ok == 1)
     {
         create_page($page_text);
+    }
+    elsif ($ok == 2)
+    {
+        open_in_browser($url);
+        return $SUCCESS;
     }
 }
 else
 {
     print_usage();
+    system("tput", "rmcup");
     exit();
 }
 
 while (1)
 {    
     my ($input, $key) = rawInput("", 1);
+    $input = lc($input);
     
     if ($key eq "UPARROW")
     {
@@ -372,8 +385,9 @@ while (1)
         
         if ($result == $CANCELLED)
         {
-            
             display_page($current_page_lines_ref, $scroll_height);
         }
     }
 }
+
+
