@@ -313,6 +313,10 @@ else
     exit();
 }
 
+locate();
+print join("\n", map { s|/|::|g; s|\.pm$||; $_ } keys %INC);
+return;
+
 while (1)
 {    
     my ($input, $key) = rawInput("", 1);

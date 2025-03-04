@@ -6,7 +6,7 @@ use strict;
 use Exporter;
 
 our @ISA = qw(Exporter);
-our @EXPORT_OK = qw(log_write log_print);
+our @EXPORT_OK = qw(log_write);
 
 our $enabled = 0; # set to 1 to enable logging if having issues
 

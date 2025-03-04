@@ -17,4 +17,8 @@ A bare-bones terminal browser for [Gemini protocol](https://geminiprotocol.net/)
 * Arrow keys, Home, End, PageUp, PageDown, <, > - scrolling
 
 ## Dependencies
-Written with Perl 5.36.0 and uses IO::Socket::SSL, Term::ReadKey and Term::RawInput from CPAN. I don't know much about Perl but it seems very version dependent...
+* Written with Perl 5.36.0 (I don't know much about Perl but it seems very version dependent...)
+* IO::Socket::SSL
+* Term::ANSIScreen
+* Term::RawInput
+* Term::ReadKey
