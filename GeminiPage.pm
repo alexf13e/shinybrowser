@@ -14,26 +14,28 @@ use lib(".");
 use Log qw(log_write);
 
 our @ISA = qw(Exporter);
-our @EXPORT_OK = qw(render_page_lines display_page get_next_scroll_line get_next_scroll_page get_scroll_end display_command_prompt set_command_prompt set_command_error find_line_num_of_word_num);
+our @EXPORT_OK = qw(render_page_lines display_page get_next_scroll_line get_next_scroll_page get_scroll_end get_horizontal_scroll get_horizontal_scroll_end display_command_prompt set_command_prompt set_command_error find_line_num_of_word_num);
 
-our $max_print_width = 120; # set to 0 to print to full window width
+our $max_page_width = 120; # set to 0 to print to full window width
+
+our $longest_pre_line_length = 0;
 our $current_command_prompt = "";
 our $current_command_error = "";
+
+our %text_formats = ("link"     => BOLD . BLUE,
+                     "heading1" => BOLD . UNDERLINE . WHITE,
+                     "heading2" => BOLD . WHITE,
+                     "heading3" => UNDERLINE . WHITE,
+                     "pre"      => WHITE . ON_BRIGHT_BLACK,
+                     "quote"    => ITALIC . BRIGHT_WHITE
+);
 
 sub apply_text_format
 {
     my $text = $_[0];
     my $format = $_[1];
     
-    my %text_formats = ("link"     => [BOLD, BLUE],
-                        "heading1" => [BOLD, UNDERLINE, WHITE],
-                        "heading2" => [BOLD, WHITE],
-                        "heading3" => [UNDERLINE, WHITE],
-                        "quote"    => [ITALIC, WHITE, ON_BRIGHT_BLACK]
-    );
-    
-    my $format_ref = $text_formats{$format};
-    return join("", @$format_ref) . $text . RESET;
+    return $text_formats{$format} . $text . RESET;
 }
 
 sub wrap_words #(text, left_margin)
@@ -44,9 +46,9 @@ sub wrap_words #(text, left_margin)
     my @words = split(" ", $text);
     my ($chars_wide, $chars_high, $pixels_wide, $pixels_high) = GetTerminalSize();
     
-    if ($max_print_width > 0)
+    if ($max_page_width > 0)
     {
-        $chars_wide = min($chars_wide, $max_print_width);
+        $chars_wide = min($chars_wide, $max_page_width);
     }
     
     my $line_width = $left_margin;
@@ -103,6 +105,21 @@ sub wrap_words #(text, left_margin)
     return (\@wrapped_lines, \@num_words_in_line);
 }
 
+sub render_pre_text_line #(text)
+{
+    my $text = $_[0];
+    
+    $longest_pre_line_length = max($longest_pre_line_length, length($text));
+    
+    my @num_words_in_line = [1]; # doesn't technically matter how many words are in a pre line since it will never be split
+    
+    $text = apply_text_format($text, "pre");
+    my @output;
+    push(@output, "$text\n");
+    
+    return (\@output, \@num_words_in_line);
+}
+
 sub render_text_line #(text)
 {
     my $text = $_[0];
@@ -116,7 +133,7 @@ sub render_text_line #(text)
             $line = "$line\n";
         }
         
-        push(@output, "$line");
+        push(@output, $line);
     }
     
     return (\@output, $num_words_in_line_ref);
@@ -217,9 +234,10 @@ sub render_page_lines #(parsed_page_content, page_urls_ref)
     my @num_words_before_line;
     my $num_words_so_far = 0;
     
+    $longest_pre_line_length = 0;
+    
     for my $line_content_ref (@$page_content_ref)
     {
-    
         my $rendered_ref;
         my $num_words_in_lines_ref;
         my $type = $line_content_ref->{"line_type"};
@@ -230,11 +248,10 @@ sub render_page_lines #(parsed_page_content, page_urls_ref)
         }
         elsif ($type eq "text")
         {
-            # all preformatted lines are set as type text. if this line is preformatted, print as-is
+            # all preformatted lines are set as type text
             if ($preformatted)
             {
-                push(@page_lines, $line_content_ref->{"text"});
-                next;
+                ($rendered_ref, $num_words_in_lines_ref) = render_pre_text_line($line_content_ref->{"text"});
             }
             else
             {
@@ -270,18 +287,26 @@ sub render_page_lines #(parsed_page_content, page_urls_ref)
     return (\@page_lines, \@num_words_before_line);
 }
 
-sub display_page #(page_lines, scroll_height)
+sub display_page #(page_lines, scroll_height, scroll_width)
 {
     my $page_lines_ref = $_[0];
     my $scroll_height = $_[1];
+    my $scroll_width = $_[2];
     
     my ($chars_wide, $chars_high, $pixels_wide, $pixels_high) = GetTerminalSize();
+    my $page_width = $chars_wide;
+    my $left_margin = 0;
+    if ($max_page_width > 0)
+    {
+        $page_width = min($chars_wide, $max_page_width);
+        $left_margin = int(($chars_wide - $max_page_width) / 2);
+    }
     
     locate();
     cldown();
     
     my $max_line_num = scalar(@$page_lines_ref) - 1;
-    $scroll_height = max(min($scroll_height, $max_line_num - 1), 0);
+    $scroll_height = max(min($scroll_height, $max_line_num), 0);
     
     my $current_line_num = $scroll_height;
     my $lines_printed = 0;
@@ -295,10 +320,31 @@ sub display_page #(page_lines, scroll_height)
             $line =~ s/\n//;
         }
         
-        if ($max_print_width > 0)
+        if ($left_margin > 0)
         {
-            right(int(($chars_wide - $max_print_width) / 2));
+            right($left_margin);
         }
+        
+        # pre lines which are too wide to display should be cut off with indication that they can be scrolled horizontally
+        # this is kind of a mess but I don't want to track if every rendered line is a pre or not
+        my $pre_format_string = $text_formats{"pre"};        
+        if (index($line, $pre_format_string) == 0)
+        {
+            my $text_start = length($pre_format_string);
+            my $text_end = index($line, RESET);
+            my $length_without_format = $text_end - $text_start;
+            if ($length_without_format > $page_width)
+            {
+                my $print_length = $page_width - 2;
+                my $prefix = BOLD . WHITE . ON_BRIGHT_BLACK . "<" . RESET . $pre_format_string;
+                my $suffix = BOLD . WHITE . ON_BRIGHT_BLACK . ">" . RESET;
+                
+               my $text_without_format = substr($line, $text_start, $length_without_format);
+               my $output = substr($text_without_format, $scroll_width, $print_length);
+               $line = "$prefix$output$suffix\n";
+           }
+       }
+        
         print($line);
 
         $lines_printed++;
@@ -318,7 +364,7 @@ sub get_next_scroll_line #(page_lines_ref, current_scroll, scroll_delta)
     my ($chars_wide, $chars_high, $pixels_wide, $pixels_high) = GetTerminalSize();
     
     my $max_line_num = scalar(@$page_lines_ref) - 1;
-    $scroll_height = max(min($scroll_height + $scroll_delta, $max_line_num - 1), 0);
+    $scroll_height = max(min($scroll_height + $scroll_delta, $max_line_num), 0);
     
     return $scroll_height;
 }
@@ -339,7 +385,19 @@ sub get_scroll_end #(page_lines_ref)
 {
     my $page_lines_ref = $_[0];
     my $max_line_num = scalar(@$page_lines_ref) - 1;
-    return $max_line_num - 1;
+    return $max_line_num;
+}
+
+sub get_horizontal_scroll #(current_horizontal_scroll, scroll_delta)
+{
+    my $current_horizontal_scroll = $_[0];
+    my $scroll_delta = $_[1];
+    return min(max($current_horizontal_scroll + $scroll_delta, 0), $longest_pre_line_length - $max_page_width + 1);
+}
+
+sub get_horizontal_scroll_end
+{
+    return $longest_pre_line_length - $max_page_width + 1;
 }
 
 sub display_command_prompt #(prompt)

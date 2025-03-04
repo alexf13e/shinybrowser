@@ -13,7 +13,7 @@ use POSIX qw(ceil floor);
 use lib(".");
 use GeminiRequest qw(send_request make_and_send_request get_url_parts handle_url get_full_url);
 use GeminiParser qw(parse_page);
-use GeminiPage qw(render_page_lines display_page get_next_scroll_line get_next_scroll_page get_scroll_end display_command_prompt set_command_prompt set_command_error find_line_num_of_word_num);
+use GeminiPage qw(render_page_lines display_page get_next_scroll_line get_next_scroll_page get_scroll_end get_horizontal_scroll get_horizontal_scroll_end display_command_prompt set_command_prompt set_command_error find_line_num_of_word_num);
 use Log qw(log_write);
 
 system("tput", "smcup");
@@ -28,6 +28,7 @@ our $current_page_content_ref = 0;
 our $current_page_urls_ref = 0;
 our $current_page_lines_ref = 0;
 our $scroll_height = 0;
+our $scroll_width = 0; # used for horizontally scrolling pre text
 our $num_words_before_line_ref = 0;
 our $scroll_word_num = 0; # the number of the word out of all words in the page which the scroll height is at (used for keeping the content in the same place when resizing window)
 
@@ -42,7 +43,7 @@ sub winch
         
         # find the line which has the word we want to scroll to
         $scroll_height = find_line_num_of_word_num($num_words_before_line_ref, $scroll_word_num);        
-        $scroll_height = display_page($current_page_lines_ref, $scroll_height);
+        $scroll_height = display_page($current_page_lines_ref, $scroll_height, $scroll_width);
         
         display_command_prompt();
         STDOUT->flush();
@@ -64,7 +65,8 @@ sub create_page
     
     ($current_page_content_ref, $current_page_urls_ref) = parse_page($page_text);
     ($current_page_lines_ref, $num_words_before_line_ref) = render_page_lines($current_page_content_ref, $current_page_urls_ref);
-    $scroll_height = display_page($current_page_lines_ref, 0);
+    $scroll_height = display_page($current_page_lines_ref, 0, 0);
+    $scroll_width = 0;
     $scroll_word_num = 0;
 }
 
@@ -195,9 +197,10 @@ sub goto_url
 
 sub ease_scroll
 {
-    my $target_scroll_height = $_[0];
-    my $start_scroll_height = $scroll_height;
-    my $total_dif = $target_scroll_height - $start_scroll_height;
+    my $scroll_value_ref = $_[0];
+    my $target_scroll_value = $_[1];
+    my $start_scroll_value = $$scroll_value_ref;
+    my $total_dif = $target_scroll_value - $start_scroll_value;
     if ($total_dif == 0)
     {
         return;
@@ -219,7 +222,7 @@ sub ease_scroll
         $round_function = \&ceil;
     }
     
-    while ($time_elapsed < $duration and $scroll_height != $target_scroll_height)
+    while ($time_elapsed < $duration and $$scroll_value_ref != $target_scroll_value)
     {
         $time_elapsed += $dt;
         my $t = $time_elapsed / $duration;
@@ -228,13 +231,11 @@ sub ease_scroll
         {
             $eased = 1;
         }
-        my $float_scroll_height = &$cap_function($start_scroll_height + $total_dif * $eased, $target_scroll_height);
-        $scroll_height = &$round_function($float_scroll_height);
-        display_page($current_page_lines_ref, $scroll_height);           
+        my $float_scroll_value = &$cap_function($start_scroll_value + $total_dif * $eased, $target_scroll_value);
+        $$scroll_value_ref = &$round_function($float_scroll_value);
+        display_page($current_page_lines_ref, $scroll_height, $scroll_width);           
         usleep($dt);
     }
-    
-    $scroll_word_num = $$num_words_before_line_ref[$scroll_height];
 }
 
 sub open_in_browser
@@ -249,7 +250,7 @@ sub open_in_browser
         system("xdg-open", $url);
     }
 
-    display_page($current_page_lines_ref, $scroll_height);
+    display_page($current_page_lines_ref, $scroll_height, $scroll_width);
 }
 
 
@@ -320,43 +321,73 @@ while (1)
     if ($key eq "UPARROW")
     {
         my $target_scroll_height = get_next_scroll_line($current_page_lines_ref, $scroll_height, -5);
-        ease_scroll($target_scroll_height);
+        ease_scroll(\$scroll_height, $target_scroll_height);
+        $scroll_word_num = $$num_words_before_line_ref[$scroll_height];
     }
     
     if ($key eq "DOWNARROW")
     {
         my $target_scroll_height = get_next_scroll_line($current_page_lines_ref, $scroll_height, 5);
-        ease_scroll($target_scroll_height);
+        ease_scroll(\$scroll_height, $target_scroll_height);
+        $scroll_word_num = $$num_words_before_line_ref[$scroll_height];
+    }
+    
+    if ($key eq "LEFTARROW")
+    {
+        my $target_scroll_width = get_horizontal_scroll($scroll_width, -5);
+        ease_scroll(\$scroll_width, $target_scroll_width);
+    }
+    
+    if ($key eq "RIGHTARROW")
+    {
+        my $target_scroll_width = get_horizontal_scroll($scroll_width, 5);
+        ease_scroll(\$scroll_width, $target_scroll_width);
+    }
+    
+    if ($input eq ",")
+    {
+        my $target_scroll_width = 0;
+        ease_scroll(\$scroll_width, $target_scroll_width);
+    }
+    
+    if ($input eq ".")
+    {
+        my $target_scroll_width = get_horizontal_scroll_end();
+        ease_scroll(\$scroll_width, $target_scroll_width);
     }
     
     if ($key eq "PAGEUP")
     {
         my $target_scroll_height = get_next_scroll_page($current_page_lines_ref, $scroll_height, -1);
-        ease_scroll($target_scroll_height);
+        ease_scroll(\$scroll_height, $target_scroll_height);
+        $scroll_word_num = $$num_words_before_line_ref[$scroll_height];
     }
     
     if ($key eq "PAGEDOWN")
     {
         my $target_scroll_height = get_next_scroll_page($current_page_lines_ref, $scroll_height, 1);
-        ease_scroll($target_scroll_height);
+        ease_scroll(\$scroll_height, $target_scroll_height);
+        $scroll_word_num = $$num_words_before_line_ref[$scroll_height];
     }
     
     if ($key eq "HOME")
     {
         my $target_scroll_height = 0;
-        ease_scroll($target_scroll_height);
+        ease_scroll(\$scroll_height, $target_scroll_height);
+        $scroll_word_num = $$num_words_before_line_ref[$scroll_height];
     }
     
     if ($key eq "END")
     {
         my $target_scroll_height = get_scroll_end($current_page_lines_ref);
-        ease_scroll($target_scroll_height);
+        ease_scroll(\$scroll_height, $target_scroll_height);
+        $scroll_word_num = $$num_words_before_line_ref[$scroll_height];
     }
     
     if ($input eq "q")
     {
         confirm_exit();
-        display_page($current_page_lines_ref, $scroll_height);
+        display_page($current_page_lines_ref, $scroll_height, $scroll_width);
     }
     
     if ($input eq "l")
@@ -369,7 +400,7 @@ while (1)
         
          if ($result == $CANCELLED)
         {
-            display_page($current_page_lines_ref, $scroll_height);
+            display_page($current_page_lines_ref, $scroll_height, $scroll_width);
         }
     }
     
@@ -383,7 +414,7 @@ while (1)
         
         if ($result == $CANCELLED)
         {
-            display_page($current_page_lines_ref, $scroll_height);
+            display_page($current_page_lines_ref, $scroll_height, $scroll_width);
         }
     }
 }
