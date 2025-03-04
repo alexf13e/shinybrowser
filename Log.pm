@@ -8,7 +8,7 @@ use Exporter;
 our @ISA = qw(Exporter);
 our @EXPORT_OK = qw(log_write);
 
-our $enabled = 1; # set to 1 to enable logging if having issues
+our $enabled = 0; # set to 1 to enable logging if having issues
 
 sub log_write
 {
