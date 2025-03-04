@@ -10,11 +10,16 @@ A bare-bones terminal browser for [Gemini protocol](https://geminiprotocol.net/)
 * Word wrapping
 * Maximum page width with centering (configurable in GeminiPage.pm)
 
-## Controls
+## Usage
+* `./shiny.pl` for a blank page prompting for a URL.
+* `./shiny.pl <URL>` to open the given URL (assumes `gemini://` if not specified)
+
+### Controls
 * q - quit
 * l - prompt to type the number of a link to navigate to
 * g - prompt to type an address to navigate to
-* Arrow keys, Home, End, PageUp, PageDown, <, > - scrolling
+* Up/Down arrows, Home, End, PageUp, PageDown - vertical scrolling
+* Left/Right arrows, <, > - horizontal scrolling (for `pre` sections wider than the page)
 
 ## Dependencies
 * Written with Perl 5.36.0 (I don't know much about Perl but it seems very version dependent...)
