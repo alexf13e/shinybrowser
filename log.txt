@@ -1,0 +1,27 @@
+requesting: gemini://geminiprotocol.net on host geminiprotocol.net
+redirecting to: gemini://geminiprotocol.net/
+requesting: gemini://geminiprotocol.net/ on host geminiprotocol.net
+requesting: gemini://geminiprotocol.net on host geminiprotocol.net
+redirecting to: gemini://geminiprotocol.net/
+requesting: gemini://geminiprotocol.net/ on host geminiprotocol.net
+requesting: gemini://geminiprotocol.net on host geminiprotocol.net
+redirecting to: gemini://geminiprotocol.net/
+requesting: gemini://geminiprotocol.net/ on host geminiprotocol.net
+requesting: gemini://geminiprotocol.net/docs/faq.gmi on host geminiprotocol.net
+requesting: gemini://geminiprotocol.net/docs/faq-section-2.gmi on host geminiprotocol.net
+requesting: gemini://geminiprotocol.net/docs//software/ on host geminiprotocol.net
+requesting: gemini://geminiprotocol.net on host geminiprotocol.net
+redirecting to: gemini://geminiprotocol.net/
+requesting: gemini://geminiprotocol.net/ on host geminiprotocol.net
+url: docs/faq.gmi, host: geminiprotocol.net, page_dir: 
+requesting: gemini://geminiprotocol.net/docs/faq.gmi on host geminiprotocol.net
+url: /software/, host: geminiprotocol.net, page_dir: docs
+requesting: gemini://geminiprotocol.net on host geminiprotocol.net
+redirecting to: gemini://geminiprotocol.net/
+requesting: gemini://geminiprotocol.net/ on host geminiprotocol.net
+url: docs/faq.gmi, host: geminiprotocol.net, page_dir: 
+requesting: gemini://geminiprotocol.net/docs/faq.gmi on host geminiprotocol.net
+url: faq-section-1.gmi, host: geminiprotocol.net, page_dir: docs
+url: /software/, host: geminiprotocol.net, page_dir: docs
+requesting: gemini://geminiprotocol.net/software/ on host geminiprotocol.net
+url: https://tildegit.org/solderpunk/gemini-demo-1, host: geminiprotocol.net, page_dir: software

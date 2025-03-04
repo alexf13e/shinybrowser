@@ -11,7 +11,7 @@ use lib(".");
 use Log qw(log_write);
 
 our @ISA = qw(Exporter);
-our @EXPORT_OK = qw(send_request make_and_send_request get_url_parts handle_url get_full_url);
+our @EXPORT_OK = qw(send_request get_url_parts handle_url get_full_url);
 
 
 sub get_url_parts #(url) -> (protocol, host, page_dir)
@@ -106,25 +106,13 @@ sub send_request #(host, request) -> (content, ok)
     return check_response($response);
 }
 
-sub make_and_send_request #(host, page) -> (content, ok)
-{
-    my $host = $_[0];
-    my $page = $_[1];
-    
-    if (not $page or $page eq "/")
-    {
-        $page = "";
-    }
-    
-    my $request = "gemini://$host/$page\r\n";
-    return send_request($host, $request);
-}
-
 sub get_full_url #(url, host, page_dir)
 {
     my $url = $_[0];
     my $host = $_[1];
     my $page_dir = $_[2];
+
+    log_write("url: $url, host: $host, page_dir: $page_dir\n");
 
     my $full_url;
     my $protocol;
@@ -138,14 +126,24 @@ sub get_full_url #(url, host, page_dir)
             return ("relative url provided but no host", 0);
         }
         
-        $protocol = "gemini"; # relative url will always use gemini page
+        $protocol = "gemini"; # relative url will always use gemini protocol
         
         $full_url = "$protocol://$host";
-        if ($page_dir)
+        
+        if (index($url, "/") == 0)
         {
-            $full_url = "$full_url/$page_dir";    
+            $page_dir = $url;
+            $full_url = $full_url . $page_dir;
         }
-        $full_url = "$full_url/$url";
+        else
+        {
+            if($page_dir)
+            {
+                $full_url = "$full_url/$page_dir";    
+            }
+            
+            $full_url = "$full_url/$url";
+        }
     }
     else
     {

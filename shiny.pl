@@ -11,7 +11,7 @@ use Time::HiRes qw(usleep);
 use POSIX qw(ceil floor);
 
 use lib(".");
-use GeminiRequest qw(send_request make_and_send_request get_url_parts handle_url get_full_url);
+use GeminiRequest qw(send_request get_url_parts handle_url get_full_url);
 use GeminiParser qw(parse_page);
 use GeminiPage qw(render_page_lines display_page get_next_scroll_line get_next_scroll_page get_scroll_end get_horizontal_scroll get_horizontal_scroll_end display_command_prompt set_command_prompt set_command_error find_line_num_of_word_num);
 use Log qw(log_write);
