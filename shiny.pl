@@ -11,7 +11,7 @@ use Time::HiRes qw(usleep);
 use POSIX qw(ceil floor);
 
 use lib(".");
-use GeminiRequest qw(send_request get_url_parts handle_url get_full_url);
+use GeminiRequest qw(get_url_parts handle_url get_full_url);
 use GeminiParser qw(parse_page);
 use GeminiPage qw(render_page_lines display_page get_next_scroll_line get_next_scroll_page get_scroll_end get_horizontal_scroll get_horizontal_scroll_end display_command_prompt set_command_prompt set_command_error find_line_num_of_word_num);
 use Log qw(log_write);
@@ -32,8 +32,8 @@ our $scroll_width = 0; # used for horizontally scrolling pre text
 our $num_words_before_line_ref = 0;
 our $scroll_word_num = 0; # the number of the word out of all words in the page which the scroll height is at (used for keeping the content in the same place when resizing window)
 
-
 $SIG{"WINCH"} = \&winch;
+$SIG{"INT"} = $SIG{"QUIT"} = $SIG{"TERM"} = \&exit_program;
 
 sub winch
 {
@@ -48,6 +48,13 @@ sub winch
         display_command_prompt();
         STDOUT->flush();
     }
+}
+
+sub exit_program
+{
+    system("tput", "rmcup");
+    system("stty", "echo");
+    exit();
 }
 
 sub print_usage
@@ -78,10 +85,7 @@ sub confirm_exit
     chomp($answer);
     if ($answer eq "y" or $answer eq "")
     {
-        locate();
-        cldown();
-        system("tput", "rmcup");
-        exit();
+        exit_program();
     }
 }
 
@@ -269,8 +273,7 @@ if ($num_args == 0)
     }
     if ($result == $CANCELLED)
     {
-        system("tput", "rmcup");
-        exit();
+        exit_program();
     }
 }
 elsif ($num_args == 1)
@@ -280,12 +283,12 @@ elsif ($num_args == 1)
     if ($url eq "--help")
     {
         print_usage();
-        system("tput", "rmcup");
-        exit();
+        exit_program();
     }
     
-    if (index($url, "gemini://") != 0)
+    if (index($url, "://") == -1)
     {
+        # no protocol has been specified, use gemini by default
         $url = "gemini://" . $url;
     }
 
@@ -295,6 +298,9 @@ elsif ($num_args == 1)
     if ($ok == 0)
     {
         print("$page_text\n");
+        print("press return to exit\n");
+        <STDIN>;
+        exit_program();
     }
     elsif ($ok == 1)
     {
@@ -309,13 +315,8 @@ elsif ($num_args == 1)
 else
 {
     print_usage();
-    system("tput", "rmcup");
-    exit();
+    exit_program();
 }
-
-locate();
-print join("\n", map { s|/|::|g; s|\.pm$||; $_ } keys %INC);
-return;
 
 while (1)
 {    

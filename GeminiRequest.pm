@@ -6,12 +6,13 @@ use strict;
 use Exporter;
 
 use Net::SSLeay qw(sslcat);
+use Term::ANSIScreen qw(:cursor);
 
 use lib(".");
 use Log qw(log_write);
 
 our @ISA = qw(Exporter);
-our @EXPORT_OK = qw(send_request get_url_parts handle_url get_full_url);
+our @EXPORT_OK = qw(get_url_parts get_full_url handle_url);
 
 
 sub get_url_parts #(url) -> (protocol, host, page_dir)
@@ -51,68 +52,11 @@ sub get_url_parts #(url) -> (protocol, host, page_dir)
     return ($protocol, $host, $page_dir);
 }
 
-sub redirect #(request) -> (content, ok)
-{
-    my $request = $_[0];
-    my (undef, $host, undef) = get_url_parts($request);
-    
-    log_write("redirecting to: $request\n");
-    return send_request($host, "$request\r\n");
-}
-
-sub check_response #(response) -> (content, ok)
-{
-    my $response = $_[0];
-    my $header_length = index($response, "\r\n");
-    if ($header_length < 0)
-    {
-        $header_length = 0;
-    }
-    
-    my $header = substr($response, 0, $header_length);
-    # body may not exist, 
-    my $first_space = index($header, " ");
-    my $status = substr($header, 0, $first_space);
-    my $meta = substr($header, $first_space + 1);
-
-    if (substr($status, 0, 1) eq "2")
-    {
-        my $body = substr($response, index($response, "\n") + 1);
-        return ($body, 1);
-    }
-    if (substr($status, 0, 1) eq "3")
-    {
-        return redirect($meta);
-    }
-    
-    return ("Error: $response\n", 0);
-}
-
-sub send_request #(host, request) -> (content, ok)
-{
-    my $host = $_[0];
-    my $request = $_[1];
-    my $printable_request = substr($request, 0, -2);
-    log_write("requesting: $printable_request on host $host\n");
-    
-    my $port = 1965;
-    my ($response, $err) = sslcat($host, $port, $request);
-    
-    if ($err)
-    {
-        return ("request error: $err", 0);
-    }
-    
-    return check_response($response);
-}
-
 sub get_full_url #(url, host, page_dir)
 {
     my $url = $_[0];
     my $host = $_[1];
     my $page_dir = $_[2];
-
-    log_write("url: $url, host: $host, page_dir: $page_dir\n");
 
     my $full_url;
     my $protocol;
@@ -153,6 +97,61 @@ sub get_full_url #(url, host, page_dir)
     return ($full_url, 1);
 }
 
+sub redirect #(request) -> (content, ok)
+{
+    my $request = $_[0];
+    my (undef, $host, undef) = get_url_parts($request);
+    
+    print("redirecting to: $request\n");
+    return send_request($host, "$request\r\n");
+}
+
+sub check_response #(response) -> (content, ok)
+{
+    my $response = $_[0];
+    my $header_length = index($response, "\r\n");
+    if ($header_length < 0)
+    {
+        $header_length = 0;
+    }
+    
+    my $header = substr($response, 0, $header_length);
+    # body may not exist, 
+    my $first_space = index($header, " ");
+    my $status = substr($header, 0, $first_space);
+    my $meta = substr($header, $first_space + 1);
+
+    if (substr($status, 0, 1) eq "2")
+    {
+        my $body = substr($response, index($response, "\n") + 1);
+        return ($body, 1);
+    }
+    if (substr($status, 0, 1) eq "3")
+    {
+        return redirect($meta);
+    }
+    
+    return ("Error: $response\n", 0);
+}
+
+sub send_request #(host, request) -> (content, ok)
+{
+    my $host = $_[0];
+    my $request = $_[1];
+    my $printable_request = substr($request, 0, -2);
+    print("requesting: $printable_request on host $host\n");
+    
+    my $port = 1965;
+    my ($response, $err) = sslcat($host, $port, $request);
+    
+    if ($err)
+    {
+        return ("request error: $err", 0);
+    }
+    
+    return check_response($response);
+}
+
 sub handle_url #(url, host)
 {
     my $url = $_[0];
@@ -165,6 +164,8 @@ sub handle_url #(url, host)
     }
     
     my $request = "$url\r\n";
+    
+    locate(); # for printing request info
     return send_request($host, $request);
 }
 
